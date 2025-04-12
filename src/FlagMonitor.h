@@ -7,7 +7,7 @@ public:
 	FlagMonitor(bool initialCondition = false);
 
 	void tryEnter();
-	void notifyOne();
+	void reportExit();
 
 private:
 	std::mutex guard;

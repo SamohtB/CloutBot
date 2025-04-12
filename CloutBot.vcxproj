@@ -19,6 +19,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GuildScheduler.cpp" />
+    <ClCompile Include="src\FlagMonitor.cpp" />
     <ClCompile Include="src\MessageHistoryProcessorThread.cpp" />
     <ClCompile Include="src\CloutBot.cpp" />
     <ClCompile Include="src\Debug.cpp" />
@@ -30,6 +32,8 @@
     <ClCompile Include="src\ThreadPool.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GuildScheduler.h" />
+    <ClInclude Include="src\FlagMonitor.h" />
     <ClInclude Include="src\MessageHistoryProcessorThread.h" />
     <ClInclude Include="src\CloutBot.h" />
     <ClInclude Include="src\config.h" />
