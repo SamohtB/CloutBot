@@ -13,4 +13,4 @@ private:
 	std::mutex guard;
 	std::condition_variable condition;
 	bool isOpen = false;
-}
+};

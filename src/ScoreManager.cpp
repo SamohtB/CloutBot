@@ -16,7 +16,7 @@ ScoreManager::~ScoreManager()
     delete sharedInstance;
 }
 
-bool ScoreManager::AddScore(GuildId guild, UserId user, int score)
+bool ScoreManager::addScore(GuildId guild, UserId user, int score)
 {
     bool isNewUser = false;
     ScoreTable scoreTable = this->guildScoreTable[guild];
@@ -31,7 +31,7 @@ bool ScoreManager::AddScore(GuildId guild, UserId user, int score)
     return isNewUser;
 }
 
-void ScoreManager::AddGuild(GuildId guild)
+void ScoreManager::addGuild(GuildId guild)
 {
     this->guildScoreTable.emplace(guild, ScoreTable());
 }

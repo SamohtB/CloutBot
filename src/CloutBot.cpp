@@ -1,15 +1,16 @@
 #include "CloutBot.h"
 #include "ScoreManager.h"
+#include "MessageHistoryProcessorThread.h"
 
 CloutBot::CloutBot(std::string bot_token)
 {
-	this->bot = std::shared_ptr<dpp::cluster>(bot_token);
-
+	this->bot = std::make_shared<dpp::cluster>(bot_token);
+	this->masterProcessorThread = std::make_shared<MessageHistoryProcessorThread>(this->bot);
+	
 	this->bot->on_log(dpp::utility::cout_logger());
 
 	this->bot->on_ready([this](const dpp::ready_t& event)
 	{
-
 		Debug::Log("CloutBot Ready!");
 
 		dpp::slashcommand ping_cmd("ping", "Replies with the username of the caller", this->bot->me.id);
@@ -43,7 +44,8 @@ void CloutBot::RegisterGuilds()
 	this->bot->on_guild_create([this](const dpp::guild_create_t& event)
 		{
 			const dpp::guild& g = event.created;
-			ScoreManager::getInstance()->AddGuild(g.id);
+			ScoreManager::getInstance()->addGuild(g.id);
+			this->masterProcessorThread->addGuild(g.id, g.name);
 			Debug::Log("Joined guild: " + g.name + " (ID: " + g.id.str() + ")");
 		});
 }

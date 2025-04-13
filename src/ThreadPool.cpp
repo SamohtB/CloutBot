@@ -53,8 +53,8 @@ void ThreadPool::run()
 {
 	while (this->isRunning)
 	{
-		this->taskCountMonitor->tryEnter();
-		this->workerCountMonitor->tryEnter();
+		this->taskCountMonitor->tryEnter(); // wait for task
+		this->workerCountMonitor->tryEnter(); // wait for worker
 
 		WorkerPtr worker_thread = this->inactiveThreadList.front();
 		this->inactiveThreadList.pop();

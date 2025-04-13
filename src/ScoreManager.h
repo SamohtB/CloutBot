@@ -14,8 +14,8 @@ public:
 
 	static ScoreManager* getInstance();
 
-	bool AddScore(GuildId guild, UserId user, int score);
-	void AddGuild(GuildId guild);
+	bool addScore(GuildId guild, UserId user, int score);
+	void addGuild(GuildId guild);
 
 private:
 	ScoreManager();

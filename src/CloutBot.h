@@ -5,6 +5,8 @@
 
 #include "Debug.h"
 
+class MessageHistoryProcessorThread;
+
 class CloutBot
 {
 public:
@@ -13,6 +15,7 @@ public:
 	void RegisterGuilds();
 
 private:
+	std::shared_ptr<MessageHistoryProcessorThread> masterProcessorThread;
 	std::shared_ptr<dpp::cluster> bot;
 };
 
