@@ -14,6 +14,10 @@ MessageHistoryProcessorThread::MessageHistoryProcessorThread(std::shared_ptr<dpp
 MessageHistoryProcessorThread::~MessageHistoryProcessorThread()
 {
 	this->flagMonitor->reportExit();
+	for (const auto& scheduler : this->schedulerList)
+	{
+		scheduler->stop();
+	}
 }
 
 void MessageHistoryProcessorThread::addGuild(dpp::snowflake guildId, std::string name)
@@ -22,11 +26,12 @@ void MessageHistoryProcessorThread::addGuild(dpp::snowflake guildId, std::string
 	{
 		guildList.push_back(guildId);
 
+		Debug::Log("Guild Channels Request");
 		/* Retrieve accessible text channels */
 		this->bot->channels_get(guildId,
 			[this, guildId, name](const dpp::confirmation_callback_t& callback)
 			{
-				this->onGuildChannelsFetched(guildId, name, callback);
+				this->fetchGuildChannelsCallback(guildId, name, callback);
 			});
 
 		return;
@@ -35,7 +40,7 @@ void MessageHistoryProcessorThread::addGuild(dpp::snowflake guildId, std::string
 	Debug::Log("Duplicate Guild ID dectected " + guildId.str());
 }
 
-void MessageHistoryProcessorThread::onGuildChannelsFetched(dpp::snowflake guildId, std::string name, const dpp::confirmation_callback_t & callback)
+void MessageHistoryProcessorThread::fetchGuildChannelsCallback(dpp::snowflake guildId, std::string name, const dpp::confirmation_callback_t & callback)
 {
 	if (callback.is_error()) 
 	{
@@ -45,6 +50,7 @@ void MessageHistoryProcessorThread::onGuildChannelsFetched(dpp::snowflake guildI
 
 	dpp::channel_map channels = std::get<dpp::channel_map>(callback.value);
 
+	Debug::Log("Bot User Request");
 	this->bot->guild_get_member(guildId, this->bot->me.id, [this, guildId, channels, name](const dpp::confirmation_callback_t& member_cb)
 		{
 			if (member_cb.is_error()) {
@@ -60,15 +66,21 @@ void MessageHistoryProcessorThread::onGuildChannelsFetched(dpp::snowflake guildI
 				if (channel.is_text_channel() && (channel.get_user_permissions(botMember) & dpp::p_view_channel))
 				{
 					textChannels.push_back(channel);
+					//Debug::Log("Channel Added: " + channel.name);
 				}
+				//else
+				//{
+				//	Debug::Log("No Access: " + channel.name);
+				//}
 			}
 
 			/* create sheduler to schedule tasks per guild */
-			auto guildScheduler = std::make_shared<GuildScheduler>(guildId, name, textChannels, this->threadPool);
+			auto guildScheduler = std::make_shared<GuildScheduler>(guildId, name, textChannels, this->threadPool, this->bot);
 				this->schedulerList.push_back(guildScheduler);
 				guildScheduler->start();
 
-			Debug::Log("Guild Added Successfully: " + name);
+			Debug::Log("Guild Added Successfully: " + name + 
+				"\n" + "Channels Managed: " + std::to_string(textChannels.size()));
 		});	
 }
 
@@ -76,9 +88,4 @@ void MessageHistoryProcessorThread::run()
 {
 	this->threadPool->startScheduler();
 	this->flagMonitor->tryEnter(); // sleep thread so it doesn't exit
-}
-
-void MessageHistoryProcessorThread::onFinishedExecution()
-{
-
 }

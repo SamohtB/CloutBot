@@ -45,6 +45,7 @@ void ThreadPool::stopScheduler()
 
 void ThreadPool::scheduleTask(std::shared_ptr<IWorkerAction> action)
 {
+	std::lock_guard<std::mutex> lock(this->scheduleMutex);
 	this->pendingActions.push(action);
 	this->taskCountMonitor->reportExit(); //increase tasks by 1
 }

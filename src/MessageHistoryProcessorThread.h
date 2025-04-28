@@ -3,13 +3,12 @@
 #include <vector>
 #include <memory>
 #include "IETThread.h"
-#include "IExecutionEvent.h"
 
 class ThreadPool;
 class FlagMonitor;
 class GuildScheduler;
 
-class MessageHistoryProcessorThread : public IETThread, IExecutionEvent
+class MessageHistoryProcessorThread : public IETThread
 {
 public:
 	using GuildList = std::vector<dpp::snowflake>;
@@ -21,11 +20,9 @@ public:
 
 private:
 
-	void onGuildChannelsFetched(dpp::snowflake guildId, std::string name, const dpp::confirmation_callback_t& callback);
+	void fetchGuildChannelsCallback(dpp::snowflake guildId, std::string name, const dpp::confirmation_callback_t& callback);
 	// Inherited via IETThread
 	void run() override;
-	// Inherited via IExecutionEvent
-	void onFinishedExecution() override;
 
 
 	std::unique_ptr<FlagMonitor> flagMonitor;

@@ -11,6 +11,7 @@ ScoreManager* ScoreManager::getInstance()
 }
 
 ScoreManager::ScoreManager() {}
+
 ScoreManager::~ScoreManager()
 {
     delete sharedInstance;

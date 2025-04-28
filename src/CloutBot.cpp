@@ -6,6 +6,7 @@ CloutBot::CloutBot(std::string bot_token)
 {
 	this->bot = std::make_shared<dpp::cluster>(bot_token);
 	this->masterProcessorThread = std::make_shared<MessageHistoryProcessorThread>(this->bot);
+	this->masterProcessorThread->start();
 	
 	this->bot->on_log(dpp::utility::cout_logger());
 

@@ -48,6 +48,9 @@
     <ClCompile Include="src\GuildScheduler.cpp">
       <Filter>Threads</Filter>
     </ClCompile>
+    <ClCompile Include="src\MessagesProcessor.cpp">
+      <Filter>Threads</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Debug.h">
@@ -90,6 +93,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="src\GuildScheduler.h">
+      <Filter>Threads</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MessagesProcessor.h">
       <Filter>Threads</Filter>
     </ClInclude>
   </ItemGroup>

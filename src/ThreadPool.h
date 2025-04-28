@@ -43,6 +43,6 @@ private:
 	std::unique_ptr<ResourceMonitor> workerCountMonitor = nullptr;
 	std::unique_ptr<ResourceMonitor> taskCountMonitor = nullptr;
 	std::mutex workerMutex;
-	
+	std::mutex scheduleMutex;
 };
 
